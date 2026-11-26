@@ -12,3 +12,7 @@ updates:
       interval: weekly
     commit-message:
       prefix: chore
+    # Ana surum atlamalari elle degerlendirilir; guvenlik guncellemeleri bundan etkilenmez
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
