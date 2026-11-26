@@ -77,7 +77,7 @@ try {
     git push --follow-tags; Check "Push"
 
     Step "GitHub release olusturuluyor"
-    gh release create "v$Version" dist\NotchSetup.exe dist\Notch.exedist\Notch.exe.sig dist\version.txt `
+    gh release create "v$Version" dist\NotchSetup.exe dist\Notch.exe dist\Notch.exe.sig dist\version.txt `
         --title "NotchHub for Windows $Version" --notes-file $notes
     Check "Release"
     Step "Tamam: v$Version"
