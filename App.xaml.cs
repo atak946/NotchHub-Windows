@@ -64,6 +64,7 @@ public partial class App : Application
     {
         var menu = new WinForms.ContextMenuStrip();
         menu.Items.Add("Ayarlar…", null, (_, _) => _window?.OpenSettings());
+        menu.Items.Add("Kurulum yardımcısı…", null, (_, _) => _window?.OpenOnboarding());
         _hideItem = new WinForms.ToolStripMenuItem("Notch'u gizle") { Checked = AppSettings.Current.Hidden };
         _hideItem.Click += (_, _) => _window?.ToggleHidden();
         menu.Items.Add(_hideItem);

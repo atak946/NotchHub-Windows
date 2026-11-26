@@ -92,7 +92,8 @@ Sonar's local API is undocumented, so a SteelSeries GG update may break this fea
 ## 📦 Install
 
 1. Download **Notch.exe** from [Releases](https://github.com/atak946/NotchHub-Windows/releases/latest).
-2. Run it. To install it for your user (no administrator rights), open **Settings → Kurulum ve güncelleme**
+2. Run it. A setup assistant introduces the features and asks for the basic settings and permissions on first
+   launch; you can reopen it from the tray menu. To install it for your user (no administrator rights), open **Settings → Kurulum ve güncelleme**
    and choose **Bu bilgisayara kur**.
 
 The executable is not signed with a Windows code-signing certificate, so SmartScreen may warn on first

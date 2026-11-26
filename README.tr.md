@@ -88,7 +88,8 @@ Sonar'ın yerel API'si belgelenmemiştir; bir SteelSeries GG güncellemesi bu ö
 ## 📦 Kurulum
 
 1. [Releases](https://github.com/atak946/NotchHub-Windows/releases/latest) sayfasından **Notch.exe** indir.
-2. Çalıştır. Kendi kullanıcın için kurmak istersen (yönetici izni gerekmez) **Ayarlar → Kurulum ve
+2. Çalıştır. İlk açılışta bir kurulum yardımcısı özellikleri tanıtır, temel ayarları ve izinleri sorar;
+   tepsi menüsünden yeniden açabilirsin. Kendi kullanıcın için kurmak istersen (yönetici izni gerekmez) **Ayarlar → Kurulum ve
    güncelleme → Bu bilgisayara kur**.
 
 Dosya bir Windows kod imzalama sertifikasıyla imzalı değildir; ilk açılışta SmartScreen uyarabilir.

@@ -175,7 +175,23 @@ public partial class MainWindow : Window
 
     SettingsWindow? _settings;
 
-    public void OpenSettings()
+    OnboardingWindow? _onboarding;
+    public bool IsQuitting { get; private set; }
+
+    public void OpenOnboarding()
+    {
+        if (_mode == Mode.Expanded) Collapse();
+        if (_onboarding == null)
+        {
+            _onboarding = new OnboardingWindow(this);
+            _onboarding.Closed += (_, _) => _onboarding = null;
+            _onboarding.Show();
+        }
+        if (_onboarding.WindowState == WindowState.Minimized) _onboarding.WindowState = WindowState.Normal;
+        _onboarding.Activate();
+    }
+
+    public void OpenSettings(string? page = null)
     {
         if (_mode == Mode.Expanded) Collapse();
         if (_settings == null)
@@ -185,6 +201,7 @@ public partial class MainWindow : Window
             _settings.Show();
         }
         if (_settings.WindowState == WindowState.Minimized) _settings.WindowState = WindowState.Normal;
+        if (page != null) _settings.GoTo(page);
         _settings.Activate();
     }
 
@@ -306,10 +323,12 @@ public partial class MainWindow : Window
         RebuildClipList();
         UpdateIdle();
         TabMedia.IsChecked = true;
+        if (!S.OnboardingDone) OpenOnboarding();
     }
 
     public void Shutdown()
     {
+        IsQuitting = true;
         _volume.Dispose();
         _sonar.Dispose();
         _stats.Dispose();
