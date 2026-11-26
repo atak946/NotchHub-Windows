@@ -1,0 +1,14 @@
+bin/
+obj/
+dist/
+.vs/
+.idea/
+*.user
+*.suo
+# Imzalama anahtarlari asla depoya girmez
+*.pem
+*.pfx
+*.key
+# Yerel arac ciktilari
+.claude/
+graphify-out/
