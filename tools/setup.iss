@@ -11,7 +11,7 @@
 [Setup]
 AppName=Notch
 AppVersion={#AppVersion}
-AppPublisher=NotchHub contributors
+AppPublisher=Murat ATAK
 AppPublisherURL=https://github.com/atak946/NotchHub-Windows
 VersionInfoVersion={#AppVersion}
 ; Installer.InstallDir ile ayni olmali

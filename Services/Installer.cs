@@ -82,7 +82,8 @@ public static class Installer
         using var k = Registry.CurrentUser.CreateSubKey(UninstallKey);
         k.SetValue("DisplayName", "Notch");
         k.SetValue("DisplayVersion", CurrentVersion.ToString(3));
-        k.SetValue("Publisher", "Notch");
+        k.SetValue("Publisher", "Murat ATAK");
+        k.SetValue("URLInfoAbout", "https://github.com/atak946/NotchHub-Windows");
         k.SetValue("DisplayIcon", InstalledExe);
         k.SetValue("InstallLocation", InstallDir);
         k.SetValue("UninstallString", $"\"{InstalledExe}\" --uninstall");

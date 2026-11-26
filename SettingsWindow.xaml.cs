@@ -45,6 +45,7 @@ public partial class SettingsWindow : Window
         ("health", "", "Sistem uyarıları", "Isınma, bellek ve disk uyarıları"),
         ("game", "", "Oyun", "Tam ekranda gösterilen mini performans göstergesi"),
         ("update", "", "Kurulum ve güncelleme", "Bu bilgisayara kurma ve yeni sürümleri alma"),
+        ("about", "", "Hakkında", "Sürüm, geliştirici ve bağlantılar"),
     };
 
     public SettingsWindow(MainWindow main)
@@ -259,6 +260,10 @@ public partial class SettingsWindow : Window
                 UpdatePage();
                 break;
 
+            case "about":
+                AboutPage();
+                break;
+
             case "media":
                 Section("Şarkı sözleri");
                 Row("Şarkı sözlerini göster", "Medya panelinde zamanlı sözler. Şarkı adı ve sanatçı lrclib.net'e gönderilir.",
@@ -351,6 +356,35 @@ public partial class SettingsWindow : Window
         if (!Installer.IsSingleFile)
             PageHost.Children.Add(Hint("Bu, geliştirme (çok dosyalı) sürümü; kurma ve güncelleme yalnızca tek dosyalık Notch.exe sürümünde çalışır."));
         PageHost.Children.Add(Hint("Yalnızca imzası doğrulanan sürümler kurulur. Güncelleme denetimi açıksa açılışta GitHub'dan sürüm numarası okunur."));
+    }
+
+    void AboutPage()
+    {
+        const string profile = "https://github.com/atak946";
+        const string repo = profile + "/NotchHub-Windows";
+
+        Section("Uygulama");
+        Row($"NotchHub for Windows v{Installer.CurrentVersion.ToString(3)}", "Windows için MacBook tarzı çentik: canlı bir kontrol merkezi.", new TextBlock());
+        Row("Lisans", "MIT. Apple veya SteelSeries ile bağlantılı değildir.", LinkButton("Oku", repo + "/blob/main/LICENSE"));
+
+        Section("Geliştirici");
+        Row("Murat ATAK", "github.com/atak946", LinkButton("GitHub profili", profile));
+
+        Section("Bağlantılar");
+        Row("Kaynak kodu", "github.com/atak946/NotchHub-Windows", LinkButton("Depoyu aç", repo));
+        Row("Sürüm notları", "Her sürümde nelerin değiştiği.", LinkButton("Sürümler", repo + "/releases"));
+        Row("Sorun bildir veya öneride bulun", "GitHub'da yeni bir kayıt açılır.", LinkButton("Bildir", repo + "/issues/new/choose"));
+        Row("macOS sürümü", "NotchHub", LinkButton("Aç", profile + "/NotchHub"));
+    }
+
+    Button LinkButton(string text, string url)
+    {
+        var b = new Button { Style = (Style)FindResource("PillButton"), Content = text, Height = 32, Margin = new Thickness(0), ToolTip = url };
+        b.Click += (_, _) =>
+        {
+            try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true }); } catch { }
+        };
+        return b;
     }
 
     void FpsRow()
