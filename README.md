@@ -15,8 +15,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/atak946/NotchHub-Windows/releases/latest/download/Notch.exe">
-    <img src="https://img.shields.io/badge/Download_for_Windows-Notch.exe-8b5cf6?style=for-the-badge" alt="Download for Windows" height="44">
+  <a href="https://github.com/atak946/NotchHub-Windows/releases/latest/download/NotchSetup.exe">
+    <img src="https://img.shields.io/badge/Download_for_Windows-NotchSetup.exe-8b5cf6?style=for-the-badge" alt="Download for Windows" height="44">
   </a>
 </p>
 
@@ -91,12 +91,16 @@ Sonar's local API is undocumented, so a SteelSeries GG update may break this fea
 
 ## 📦 Install
 
-1. Download **Notch.exe** from [Releases](https://github.com/atak946/NotchHub-Windows/releases/latest).
-2. Run it. A setup assistant introduces the features and asks for the basic settings and permissions on first
-   launch; you can reopen it from the tray menu. To install it for your user (no administrator rights), open **Settings → Kurulum ve güncelleme**
-   and choose **Bu bilgisayara kur**.
+1. Download **NotchSetup.exe** from [Releases](https://github.com/atak946/NotchHub-Windows/releases/latest).
+2. Run it. It installs Notch for your user (no administrator rights) with a Start menu shortcut; remove it from
+   Windows' installed apps list.
+3. On first launch a setup assistant introduces the features and asks for the basic settings and permissions;
+   you can reopen it from the tray menu.
 
-The executable is not signed with a Windows code-signing certificate, so SmartScreen may warn on first
+**Portable:** download **Notch.exe** instead and run it from any folder. You can install it later from
+**Settings → Kurulum ve güncelleme → Bu bilgisayara kur**.
+
+The files are not signed with a Windows code-signing certificate, so SmartScreen may warn on first
 launch. Updates are checked on startup against GitHub Releases and are installed only if their ECDSA
 signature verifies. You can turn the check off in Settings.
 

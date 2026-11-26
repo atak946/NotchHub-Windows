@@ -13,8 +13,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/atak946/NotchHub-Windows/releases/latest/download/Notch.exe">
-    <img src="https://img.shields.io/badge/Windows_i%C3%A7in_indir-Notch.exe-8b5cf6?style=for-the-badge" alt="Windows için indir" height="44">
+  <a href="https://github.com/atak946/NotchHub-Windows/releases/latest/download/NotchSetup.exe">
+    <img src="https://img.shields.io/badge/Windows_i%C3%A7in_indir-NotchSetup.exe-8b5cf6?style=for-the-badge" alt="Windows için indir" height="44">
   </a>
 </p>
 
@@ -87,12 +87,16 @@ Sonar'ın yerel API'si belgelenmemiştir; bir SteelSeries GG güncellemesi bu ö
 
 ## 📦 Kurulum
 
-1. [Releases](https://github.com/atak946/NotchHub-Windows/releases/latest) sayfasından **Notch.exe** indir.
-2. Çalıştır. İlk açılışta bir kurulum yardımcısı özellikleri tanıtır, temel ayarları ve izinleri sorar;
-   tepsi menüsünden yeniden açabilirsin. Kendi kullanıcın için kurmak istersen (yönetici izni gerekmez) **Ayarlar → Kurulum ve
-   güncelleme → Bu bilgisayara kur**.
+1. [Releases](https://github.com/atak946/NotchHub-Windows/releases/latest) sayfasından **NotchSetup.exe** indir.
+2. Çalıştır. Notch kendi kullanıcın için kurulur (yönetici izni gerekmez) ve Başlat menüsüne eklenir;
+   Windows'un yüklü uygulamalar listesinden kaldırabilirsin.
+3. İlk açılışta bir kurulum yardımcısı özellikleri tanıtır, temel ayarları ve izinleri sorar;
+   tepsi menüsünden yeniden açabilirsin.
 
-Dosya bir Windows kod imzalama sertifikasıyla imzalı değildir; ilk açılışta SmartScreen uyarabilir.
+**Taşınabilir kullanım:** bunun yerine **Notch.exe** indirip istediğin klasörden çalıştır. Sonradan
+**Ayarlar → Kurulum ve güncelleme → Bu bilgisayara kur** ile kurabilirsin.
+
+Dosyalar bir Windows kod imzalama sertifikasıyla imzalı değildir; ilk açılışta SmartScreen uyarabilir.
 Güncellemeler açılışta GitHub Releases'ten denetlenir ve yalnızca ECDSA imzası doğrulanırsa kurulur.
 Denetimi ayarlardan kapatabilirsin.
 

@@ -31,6 +31,7 @@ public partial class App : Application
                 case "--install-fps": Shutdown(FpsHelper.Install()); return;
                 case "--uninstall-fps": Shutdown(FpsHelper.Uninstall()); return;
                 case "--uninstall": Shutdown(Installer.Uninstall()); return;
+                case "--register": Shutdown(Installer.Register()); return;
                 case "--wait-for-exit":
                     // Kurulum/guncelleme sonrasi: eski surec kapanana kadar bekle, sonra normal basla
                     if (e.Args.Length > 1 && int.TryParse(e.Args[1], out int pid))

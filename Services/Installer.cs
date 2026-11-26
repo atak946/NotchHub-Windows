@@ -64,12 +64,26 @@ public static class Installer
         }
     }
 
+    /// <summary>NotchSetup.exe dosyayi kopyaladiktan sonra cagirir (Notch.exe --register).</summary>
+    public static int Register()
+    {
+        if (!IsInstalledCopy) return 1;
+        try
+        {
+            WriteRegistration();
+            CreateShortcut();
+            return 0;
+        }
+        catch { return 1; }
+    }
+
     static void WriteRegistration()
     {
         using var k = Registry.CurrentUser.CreateSubKey(UninstallKey);
         k.SetValue("DisplayName", "Notch");
         k.SetValue("DisplayVersion", CurrentVersion.ToString(3));
-        k.SetValue("Publisher", "Notch");
+        k.SetValue("Publisher", "Murat ATAK");
+        k.SetValue("URLInfoAbout", "https://github.com/atak946/NotchHub-Windows");
         k.SetValue("DisplayIcon", InstalledExe);
         k.SetValue("InstallLocation", InstallDir);
         k.SetValue("UninstallString", $"\"{InstalledExe}\" --uninstall");
