@@ -75,6 +75,13 @@ public partial class SettingsWindow : Window
         };
     }
 
+    /// <summary>Verilen sayfayi acar (ör. "sonar").</summary>
+    public void GoTo(string id)
+    {
+        int i = Array.FindIndex(Pages, p => p.Id == id);
+        if (i >= 0) ((RadioButton)Nav.Children[i]).IsChecked = true;
+    }
+
     // Kisayolla gizleme gibi disaridan gelen degisiklikler
     bool _suppressExternal;
     void OnExternalChange()
@@ -113,6 +120,9 @@ public partial class SettingsWindow : Window
                 Section("Başlangıç");
                 Row("Windows ile birlikte başlat", "Bilgisayar açıldığında Notch otomatik çalışır.",
                     Toggle(() => S.AutoStart, v => S.AutoStart = v));
+                var assistant = new Button { Style = (Style)FindResource("PillButton"), Content = "Aç", Height = 32, Margin = new Thickness(0) };
+                assistant.Click += (_, _) => _main.OpenOnboarding();
+                Row("Kurulum yardımcısı", "Özelliklerin tanıtımı, temel ayarlar ve izinler.", assistant);
                 Section("Görünürlük");
                 Row("Notch'u gizle", $"Tamamen gizler; ses ve bildirimler de gösterilmez.{KeyHint(S.ToggleHotkey)}",
                     Toggle(() => S.Hidden, v => S.Hidden = v, immediate: true));
@@ -345,35 +355,8 @@ public partial class SettingsWindow : Window
 
     void FpsRow()
     {
-        var status = new TextBlock { Text = "Kontrol ediliyor…", FontSize = 11.5, Foreground = SubBrush, Margin = new Thickness(0, 3, 0, 0) };
-        var btn = new Button { Style = (Style)FindResource("PillButton"), Content = "…", Height = 32, Margin = new Thickness(0), IsEnabled = false };
-        bool installed = false, outdated = false;
-
-        async void Refresh()
-        {
-            installed = await System.Threading.Tasks.Task.Run(FpsHelper.IsInstalled);
-            outdated = installed && FpsHelper.IsOutdated();
-            bool ok = installed && !outdated;
-            status.Text = outdated ? "Yardımcı güncel değil veya çalışmıyor" : ok ? "Etkin · oyun göstergesinde FPS görünür" : "Kapalı";
-            status.Foreground = ok ? new SolidColorBrush(Color.FromRgb(0x30, 0xD1, 0x58)) : SubBrush;
-            btn.Content = outdated ? "Güncelle (yönetici izni)" : ok ? "Kaldır" : "Etkinleştir (yönetici izni)";
-            btn.Background = ok ? new SolidColorBrush(Color.FromArgb(0x1A, 0xFF, 0xFF, 0xFF)) : (Brush)FindResource("Accent");
-            btn.IsEnabled = true;
-        }
-
-        btn.Click += async (_, _) =>
-        {
-            btn.IsEnabled = false;
-            status.Text = "Windows onayı bekleniyor…";
-            await FpsHelper.RunElevatedAsync(installed && !outdated ? "--uninstall-fps" : "--install-fps");
-            await System.Threading.Tasks.Task.Delay(2000); // yardimci ilk olcumu yazsin
-            Refresh();
-        };
-        Refresh();
-
-        var left = new StackPanel();
-        left.Children.Add(status);
-        Row("Oyun FPS'ini göster", null, btn, left);
+        var (status, button) = FpsControl.Create(SubBrush);
+        Row("Oyun FPS'ini göster", null, button, status);
     }
 
     static string KeyHint(string hk) => string.IsNullOrWhiteSpace(hk) ? "" : $" Kısayol: {hk.Replace("+", " + ")}";

@@ -8,6 +8,9 @@ namespace Notch.Services;
 /// <summary>Kullanici ayarlari. %AppData%\Notch\settings.json icinde saklanir.</summary>
 public sealed class AppSettings
 {
+    // Ilk acilis yardimcisi gosterildi mi
+    public bool OnboardingDone { get; set; }
+
     // Genel
     public bool AutoStart { get; set; } = true;
     public bool Hidden { get; set; }
@@ -137,7 +140,13 @@ public sealed class AppSettings
         try
         {
             if (File.Exists(FilePath))
-                return JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(FilePath)) ?? new AppSettings();
+            {
+                var json = File.ReadAllText(FilePath);
+                var loaded = JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+                // Yardimcidan onceki surumden gelen kullaniciya gosterme
+                if (!json.Contains(nameof(OnboardingDone))) loaded.OnboardingDone = true;
+                return loaded;
+            }
         }
         catch { }
         var s = new AppSettings();
@@ -160,7 +169,7 @@ public sealed class AppSettings
     public static void ResetToDefaults()
     {
         bool hidden = Current.Hidden;
-        Current = new AppSettings { Hidden = hidden };
+        Current = new AppSettings { Hidden = hidden, OnboardingDone = Current.OnboardingDone };
         Save();
     }
 }
