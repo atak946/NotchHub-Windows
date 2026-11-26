@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -122,7 +121,7 @@ public static class FpsHelper
         using var single = new Mutex(true, "Notch_FpsHelper", out bool first);
         if (!first) return;
 
-        var counts = new ConcurrentDictionary<int, int>();
+        var meter = new FrameMeter();
         try { TraceEventSession.GetActiveSession("NotchFps")?.Stop(); } catch { }
         using var session = new TraceEventSession("NotchFps") { StopOnDispose = true };
         session.EnableProvider(DxgiGuid, TraceEventLevel.Informational, ulong.MaxValue);
@@ -131,23 +130,16 @@ public static class FpsHelper
         {
             int id = (int)e.ID;
             bool present = (e.ProviderGuid == DxgiGuid && (id == 42 || id == 55)) || (e.ProviderGuid == D3D9Guid && id == 1);
-            if (present) counts.AddOrUpdate(e.ProcessID, 1, (_, v) => v + 1);
+            if (present) meter.Add(e.ProcessID, e.TimeStampRelativeMSec, Environment.TickCount64);
         };
         new Thread(() => { try { session.Source.Process(); } catch { } }) { IsBackground = true }.Start();
 
-        var sw = Stopwatch.StartNew();
         int notchMissing = 0;
         while (true)
         {
             Thread.Sleep(1000);
-            double secs = sw.Elapsed.TotalSeconds;
-            sw.Restart();
-            var snap = counts.ToArray();
-            counts.Clear();
-
             GetWindowThreadProcessId(GetForegroundWindow(), out uint fg);
-            int presents = snap.FirstOrDefault(kv => kv.Key == (int)fg).Value;
-            int fps = (int)Math.Round(presents / Math.Max(0.5, secs));
+            int fps = meter.Fps((int)fg, Environment.TickCount64);
             try { File.WriteAllText(OutputPath, $"{fg} {fps} {DateTime.UtcNow.Ticks}"); } catch { }
 
             // Notch kapandiysa bir dakika sonra yardimci da kapanir
