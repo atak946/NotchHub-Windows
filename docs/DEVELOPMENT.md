@@ -15,7 +15,8 @@ The multi-file build output is a development version: it cannot install or updat
 
 ## Releases
 
-Releases are built locally and published to GitHub Releases.
+Releases are built locally and published to GitHub Releases. The installer needs Inno Setup 6
+(`winget install JRSoftware.InnoSetup`); its script is `tools/setup.iss`.
 
 ```powershell
 # 1. Write and commit docs/release-notes/<version>.md
@@ -25,10 +26,11 @@ powershell -ExecutionPolicy Bypass -File tools\release.ps1 1.4.0
 
 Add `-DryRun` to only build and sign into `dist\`. Publishing needs a clean git tree and `gh auth login`.
 
-Each release has three assets:
+Each release has four assets:
 
 | File | Purpose |
 |---|---|
+| `NotchSetup.exe` | Per-user installer containing the same executable |
 | `Notch.exe` | Self-contained single-file build |
 | `Notch.exe.sig` | ECDSA P-256 / SHA-256 signature of the executable |
 | `version.txt` | Version number the app compares against |

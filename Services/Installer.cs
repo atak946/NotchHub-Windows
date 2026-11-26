@@ -64,6 +64,19 @@ public static class Installer
         }
     }
 
+    /// <summary>NotchSetup.exe dosyayi kopyaladiktan sonra cagirir (Notch.exe --register).</summary>
+    public static int Register()
+    {
+        if (!IsInstalledCopy) return 1;
+        try
+        {
+            WriteRegistration();
+            CreateShortcut();
+            return 0;
+        }
+        catch { return 1; }
+    }
+
     static void WriteRegistration()
     {
         using var k = Registry.CurrentUser.CreateSubKey(UninstallKey);

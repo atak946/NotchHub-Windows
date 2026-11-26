@@ -20,6 +20,14 @@ function Check($what) { if ($LASTEXITCODE -ne 0) { throw "$what basarisiz" } }
 if ($Version -notmatch '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$') { throw "'$Version' gecerli bir surum degil (or. 1.4.0)" }
 $notes = "docs/release-notes/$Version.md"
 
+# Inno Setup derleyicisi (winget install JRSoftware.InnoSetup)
+$iscc = @(
+    (Get-Command ISCC.exe -ErrorAction SilentlyContinue).Source
+    "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe"
+    "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+) | Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
+if (-not $iscc) { throw "Inno Setup 6 kurulu degil: winget install JRSoftware.InnoSetup" }
+
 if (-not $DryRun) {
     foreach ($tool in 'git', 'gh', 'dotnet') {
         if (-not (Get-Command $tool -ErrorAction SilentlyContinue)) { throw "'$tool' kurulu degil" }
@@ -46,6 +54,10 @@ try {
     New-Item -ItemType Directory -Force dist | Out-Null
     Copy-Item (Join-Path $out 'Notch.exe') dist\Notch.exe -Force
 
+    Step "Kurulum dosyasi derleniyor"
+    & $iscc /Q "/DAppVersion=$Version" tools\setup.iss
+    Check "Kurulum dosyasi"
+
     Step "Imzalaniyor"
     $signArgs = @('dist\Notch.exe')
     if ($Key) { $signArgs += $Key }
@@ -65,7 +77,7 @@ try {
     git push --follow-tags; Check "Push"
 
     Step "GitHub release olusturuluyor"
-    gh release create "v$Version" dist\Notch.exe dist\Notch.exe.sig dist\version.txt `
+    gh release create "v$Version" dist\NotchSetup.exe dist\Notch.exedist\Notch.exe.sig dist\version.txt `
         --title "NotchHub for Windows $Version" --notes-file $notes
     Check "Release"
     Step "Tamam: v$Version"
