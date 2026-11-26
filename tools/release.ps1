@@ -66,6 +66,10 @@ try {
     # version.txt en son yazilir: yarim kalan yayin guncelleme olarak gorunmesin
     [IO.File]::WriteAllText((Join-Path (Get-Location) 'dist\version.txt'), $Version)
 
+    # Yuklenecek dosyalar etiket gonderilmeden once (denemede de) denetlenir
+    $assets = 'dist\NotchSetup.exe', 'dist\Notch.exe', 'dist\Notch.exe.sig', 'dist\version.txt'
+    foreach ($asset in $assets) { if (-not (Test-Path $asset -PathType Leaf)) { throw "Eksik yayin dosyasi: $asset" } }
+
     if ($DryRun) { Step "Deneme: dist\ hazir, git ve GitHub degistirilmedi"; return }
 
     Step "Commit, etiket ve push"
@@ -77,7 +81,7 @@ try {
     git push --follow-tags; Check "Push"
 
     Step "GitHub release olusturuluyor"
-    gh release create "v$Version" dist\NotchSetup.exe dist\Notch.exe dist\Notch.exe.sig dist\version.txt `
+    gh release create "v$Version" $assets `
         --title "NotchHub for Windows $Version" --notes-file $notes
     Check "Release"
     Step "Tamam: v$Version"

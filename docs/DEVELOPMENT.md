@@ -13,6 +13,11 @@ Quit a running copy from the tray icon before building, otherwise the files are 
 
 The multi-file build output is a development version: it cannot install or update itself.
 
+CI also publishes the single-file build, compiles the installer and installs it silently.
+
+If a change affects the elevated FPS helper (its code or the TraceEvent package), raise `MinHelperVersion` in
+`Services/FpsHelper.cs` to the release that ships it, so users are offered **Güncelle**.
+
 ## Releases
 
 Releases are built locally and published to GitHub Releases. The installer needs Inno Setup 6

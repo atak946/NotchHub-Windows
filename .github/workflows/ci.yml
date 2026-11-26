@@ -30,3 +30,37 @@ jobs:
 
       - name: Build
         run: dotnet build Notch.csproj -c Release
+
+      - name: Publish single file
+        run: >
+          dotnet publish Notch.csproj -c Release -r win-x64 --self-contained true
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true -o dist
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $setup = Join-Path $env:RUNNER_TEMP 'innosetup.exe'
+          Invoke-WebRequest https://github.com/jrsoftware/issrc/releases/download/is-6_7_3/innosetup-6.7.3.exe -OutFile $setup
+          if ((Get-FileHash $setup -Algorithm SHA256).Hash -ne '9c73c3bae7ed48d44112a0f48e66742c00090bdb5bef71d9d3c056c66e97b732') { throw 'Inno Setup hash mismatch' }
+          $p = Start-Process $setup -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/CURRENTUSER', "/DIR=$env:RUNNER_TEMP\inno" -Wait -PassThru
+          if ($p.ExitCode -ne 0) { throw "Inno Setup install failed: $($p.ExitCode)" }
+
+      - name: Build installer
+        shell: pwsh
+        run: |
+          $version = ([xml](Get-Content Notch.csproj -Raw)).SelectSingleNode('//Version').InnerText
+          & "$env:RUNNER_TEMP\inno\ISCC.exe" /Q "/DAppVersion=$version" tools\setup.iss
+          if ($LASTEXITCODE -ne 0) { throw 'Installer build failed' }
+
+      - name: Test installer
+        shell: pwsh
+        timeout-minutes: 5
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $p = Start-Process dist\NotchSetup.exe -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART' -Wait -PassThru
+          if ($p.ExitCode -ne 0) { throw "Setup failed: $($p.ExitCode)" }
+          if (-not (Test-Path "$env:LOCALAPPDATA\Programs\Notch\Notch.exe")) { throw 'Notch.exe was not installed' }
+          if (-not (Test-Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Notch.lnk")) { throw 'Start menu shortcut is missing' }
+          Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\Notch' | Select-Object DisplayName, DisplayVersion, Publisher

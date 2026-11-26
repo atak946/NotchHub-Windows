@@ -303,7 +303,7 @@ public partial class SettingsWindow : Window
                     "C:\\Program Files\\Notch klasörüne kopyalanır ve oturum açılınca yönetici haklarıyla başlar; Notch'un kendisi normal haklarla çalışmaya devam eder. " +
                     "DirectX 9–12 oyunlarında çalışır; bazı Vulkan/OpenGL oyunlarında görünmeyebilir. " +
                     "Özel tam ekran (exclusive fullscreen) oyunlarda hiçbir pencere görünmez; kenarlıksız pencere modunu kullan. " +
-                    "Notch'u güncelledikten sonra FPS'i yeniden etkinleştir."));
+                    "Bir güncelleme yardımcının da yenilenmesini gerektirirse burada Güncelle düğmesi çıkar."));
                 break;
         }
 

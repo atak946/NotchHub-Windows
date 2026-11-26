@@ -35,8 +35,23 @@ public static class FpsHelper
 
     public static bool IsInstalled() => RunSchtasks($"/Query /TN \"{TaskName}\"") == 0;
 
-    /// <summary>Eski surumun yardimcisi hala kurulu (ciktisini baska yere yazar): yeniden etkinlestirilmeli.</summary>
-    public static bool IsOutdated() => !File.Exists(OutputPath);
+    /// <summary>
+    /// Yardimcinin davranisini degistiren her surumde yukseltilmeli (olcum kodu, TraceEvent paketi, gorev ayari):
+    /// daha eski kurulu yardimci icin "Güncelle" dugmesi cikar.
+    /// </summary>
+    static readonly Version MinHelperVersion = new(1, 4, 1);
+
+    /// <summary>Eski surumun yardimcisi hala kurulu veya hic cikti yazmiyor: yeniden etkinlestirilmeli.</summary>
+    public static bool IsOutdated()
+    {
+        if (!File.Exists(OutputPath)) return true;
+        try
+        {
+            var v = FileVersionInfo.GetVersionInfo(Path.Combine(InstallDir, "Notch.exe"));
+            return new Version(v.FileMajorPart, v.FileMinorPart, v.FileBuildPart) < MinHelperVersion;
+        }
+        catch { return true; }
+    }
 
     /// <summary>Kurulum/kaldirma icin UAC onayi isteyerek kendini yonetici olarak calistirir.</summary>
     public static Task<bool> RunElevatedAsync(string verb) => Task.Run(() =>
